@@ -1,8 +1,8 @@
 package com.example.zmc_todolist;
 
+import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Notification;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     TextView userNameWrongTipText;
     @BindView(R.id.password_wrong_tip)
     TextView passwordWrongTipText;
+    @BindView(R.id.login_in_button)
+    Button loginInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +43,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class LetterNumberWatcher implements TextWatcher {
-        private final int USER_MIN_LETTER_NUMBER = 3;
-        private final int USER_MAX_LETTER_NUMBER = 12;
-        private final int PASSWORD_MIN_LETTER_NUMBER = 6;
-        private final int PASSWORD_MAX_LETTER_NUMBER = 18;
-
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -61,10 +58,14 @@ public class MainActivity extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
             judgeUserNameRightly();
             judgePasswordRightly();
+            loginButtonChange();
         }
 
-        public boolean judgeUserNameRightly(){
+        public boolean judgeUserNameRightly() {
             int length = userNameInput.getText().toString().length();
+            int USER_MIN_LETTER_NUMBER = 3;
+            int USER_MAX_LETTER_NUMBER = 12;
+
             if (length == 0) {
                 userNameWrongTipButton.setVisibility(View.INVISIBLE);
                 return false;
@@ -76,8 +77,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         }
-        public boolean judgePasswordRightly(){
+
+        public boolean judgePasswordRightly() {
             int length = passwordInput.getText().toString().length();
+            int PASSWORD_MIN_LETTER_NUMBER = 6;
+            int PASSWORD_MAX_LETTER_NUMBER = 18;
+
             if (length == 0) {
                 passwordWrongTipButton.setVisibility(View.INVISIBLE);
                 return false;
@@ -90,6 +95,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        public void loginButtonChange() {
+            if (judgeUserNameRightly() && judgePasswordRightly()) {
+                loginInButton.setEnabled(true);
+                loginInButton.setBackground(getResources().getDrawable(R.drawable.btn_able_background_login_in));
+            }else{
+                loginInButton.setEnabled(false);
+                loginInButton.setBackground(getResources().getDrawable(R.drawable.btn_unable_background_login_in));
+            }
+        }
     }
 
 }
