@@ -26,7 +26,7 @@
         tools:layout_editor_absoluteX="40dp" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/password_input"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="40dp"
@@ -39,7 +39,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="70dp"
         android:text="@string/login_in_string"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintTop_toBottomOf="@+id/password_input"
         tools:layout_editor_absoluteX="40dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
