@@ -3,6 +3,7 @@ package com.example.zmc_todolist;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,16 +12,37 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.security.MessageDigest;
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     ViewModel viewModel;
-    int USER_MIN_LETTER_NUMBER = 3;
-    int USER_MAX_LETTER_NUMBER = 12;
-    int PASSWORD_MIN_LETTER_NUMBER = 6;
-    int PASSWORD_MAX_LETTER_NUMBER = 18;
+    UserInformation userInformation;
+    final String USER_INFORMATION_URL="https://twc-android-bootcamp.github.io/fake-data/data/user.json";
+    final int USER_MIN_LETTER_NUMBER = 3;
+    final int USER_MAX_LETTER_NUMBER = 12;
+    final int PASSWORD_MIN_LETTER_NUMBER = 6;
+    final int PASSWORD_MAX_LETTER_NUMBER = 18;
 
     @BindView(R.id.user_name_input)
     EditText userNameInput;
@@ -64,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
             if (length > PASSWORD_MAX_LETTER_NUMBER) {
                 passwordWrongTipText.setText("用户名最多输入18个字符");
                 passwordWrongTipText.setVisibility(View.VISIBLE);
+            }
+        });
+
+        loginInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findUserInformation(USER_INFORMATION_URL);
             }
         });
     }
@@ -131,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    class wrongNameButtonClick implements View.OnClickListener {
+    //    class wrongNameButtonClick implements View.OnClickListener {
 //        int length = userNameInput.getText().toString().length();
 //
 //        @Override
@@ -162,5 +191,43 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 //    }
+    public void findUserInformation(String url) {
+        final OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .get()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull final Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String result = Objects.requireNonNull(response.body()).string();
+                    Gson gson = new Gson();
+                    userInformation = gson.fromJson(result, UserInformation.class);
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+        });
+    }
+
+    public String encrypt(String src) throws Exception{
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        byte[] bytes = md5.digest(src.getBytes());
+        StringBuilder result = new StringBuilder();
+        for (byte b : bytes) {
+            String temp = Integer.toHexString(b & 0xff);
+            if (temp.length() == 1) {
+                temp = "0" + temp;
+            }
+            result.append(temp);
+        }
+        return result.toString();
+    }
+
 
 }
