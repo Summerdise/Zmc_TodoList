@@ -3,8 +3,8 @@ package com.example.zmc_todolist;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -13,16 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.security.MessageDigest;
 import java.util.Objects;
 
@@ -58,12 +52,18 @@ public class MainActivity extends AppCompatActivity {
     TextView passwordWrongTipText;
     @BindView(R.id.login_in_button)
     Button loginInButton;
+    @BindView(R.id.input_tips)
+    TextView inputTips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+            ButterKnife.bind(this);
         userNameInput.addTextChangedListener(new LetterNumberWatcher());
         passwordInput.addTextChangedListener(new LetterNumberWatcher());
         userNameWrongTipButton.setOnClickListener(view -> {
@@ -93,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 findUserInformation(USER_INFORMATION_URL);
+                try {
+                    verifyInput();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             userNameWrongTipText.setVisibility(View.INVISIBLE);
             passwordWrongTipText.setVisibility(View.INVISIBLE);
+            inputTips.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -197,22 +203,15 @@ public class MainActivity extends AppCompatActivity {
                 .get()
                 .url(url)
                 .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull final Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    final String result = Objects.requireNonNull(response.body()).string();
-                    Gson gson = new Gson();
-                    userInformation = gson.fromJson(result, UserInformation.class);
-
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-            }
-        });
+        Call call = client.newCall(request);
+        try {
+            Response response = call.execute();
+            final String result = Objects.requireNonNull(response.body()).string();
+            Gson gson = new Gson();
+            userInformation = gson.fromJson(result, UserInformation.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String encrypt(String src) throws Exception{
@@ -226,8 +225,28 @@ public class MainActivity extends AppCompatActivity {
             }
             result.append(temp);
         }
+        System.out.println(result.toString());
         return result.toString();
     }
 
+    public boolean isUserNameExist(String input){
+        return input.equals(userInformation.getName());
+    }
 
+    public boolean isPasswordExist(String input) throws Exception {
+        String md5Input = encrypt(input);
+        return md5Input.equals(userInformation.getPassword());
+    }
+
+    public void verifyInput() throws Exception {
+        if(!isUserNameExist(userNameInput.getText().toString())){
+            inputTips.setText("用户名不正确");
+            inputTips.setVisibility(View.VISIBLE);
+        }else if(!isPasswordExist(passwordInput.getText().toString())){
+            inputTips.setText("密码不正确");
+            inputTips.setVisibility(View.VISIBLE);
+        }else{
+            System.out.println("nb");
+        }
+    }
 }
