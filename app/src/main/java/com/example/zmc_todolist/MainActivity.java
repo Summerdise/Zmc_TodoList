@@ -3,6 +3,9 @@ package com.example.zmc_todolist;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
@@ -14,8 +17,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Objects;
@@ -23,16 +24,15 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ViewModel viewModel;
+    private SharedPreferences sharedPreferences;
     UserInformation userInformation;
-    final String USER_INFORMATION_URL="https://twc-android-bootcamp.github.io/fake-data/data/user.json";
+    final String USER_INFORMATION_URL = "https://twc-android-bootcamp.github.io/fake-data/data/user.json";
     final int USER_MIN_LETTER_NUMBER = 3;
     final int USER_MAX_LETTER_NUMBER = 12;
     final int PASSWORD_MIN_LETTER_NUMBER = 6;
@@ -63,7 +63,11 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-            ButterKnife.bind(this);
+        ButterKnife.bind(this);
+        sharedPreferences = getSharedPreferences("test", Context.MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("isCorrect",false)){
+            startTasksActivity();
+        }
         userNameInput.addTextChangedListener(new LetterNumberWatcher());
         passwordInput.addTextChangedListener(new LetterNumberWatcher());
         userNameWrongTipButton.setOnClickListener(view -> {
@@ -214,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String encrypt(String src) throws Exception{
+    public String encrypt(String src) throws Exception {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         byte[] bytes = md5.digest(src.getBytes());
         StringBuilder result = new StringBuilder();
@@ -229,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         return result.toString();
     }
 
-    public boolean isUserNameExist(String input){
+    public boolean isUserNameExist(String input) {
         return input.equals(userInformation.getName());
     }
 
@@ -239,14 +243,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void verifyInput() throws Exception {
-        if(!isUserNameExist(userNameInput.getText().toString())){
+        if (!isUserNameExist(userNameInput.getText().toString())) {
             inputTips.setText("用户名不正确");
             inputTips.setVisibility(View.VISIBLE);
-        }else if(!isPasswordExist(passwordInput.getText().toString())){
+        } else if (!isPasswordExist(passwordInput.getText().toString())) {
             inputTips.setText("密码不正确");
             inputTips.setVisibility(View.VISIBLE);
-        }else{
-            System.out.println("nb");
+        } else {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isCorrect", true);
+            editor.apply();
+            startTasksActivity();
         }
+    }
+
+    public void startTasksActivity() {
+        Intent intent = new Intent(MainActivity.this, TasksActivity.class);
+        startActivity(intent);
     }
 }
