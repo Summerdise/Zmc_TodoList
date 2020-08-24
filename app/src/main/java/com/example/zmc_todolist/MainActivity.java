@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
@@ -14,12 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Objects;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
     TextView passwordWrongTipText;
     @BindView(R.id.login_in_button)
     Button loginInButton;
-    @BindView(R.id.input_tips)
-    TextView inputTips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             userNameWrongTipText.setVisibility(View.INVISIBLE);
             passwordWrongTipText.setVisibility(View.INVISIBLE);
-            inputTips.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -158,49 +158,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        @SuppressLint("UseCompatLoadingForDrawables")
+        @SuppressLint({"UseCompatLoadingForDrawables",})
         public void loginButtonChange() {
             if (judgeUserNameRightly() && judgePasswordRightly()) {
-                loginInButton.setEnabled(true);
+                loginInButton.setTextColor(Color.parseColor("#ffffff"));
                 loginInButton.setBackground(getResources().getDrawable(R.drawable.btn_able_background_login_in));
+                loginInButton.setEnabled(true);
             } else {
-                loginInButton.setEnabled(false);
+                loginInButton.setTextColor(Color.parseColor("#000000"));
                 loginInButton.setBackground(getResources().getDrawable(R.drawable.btn_unable_background_login_in));
+                loginInButton.setEnabled(false);
             }
         }
     }
 
-    //    class wrongNameButtonClick implements View.OnClickListener {
-//        int length = userNameInput.getText().toString().length();
-//
-//        @Override
-//        public void onClick(View view) {
-//            if (length < USER_MIN_LETTER_NUMBER) {
-//                userNameWrongTipText.setText("用户名需要输入至少3个字符");
-//                userNameWrongTipText.setVisibility(View.VISIBLE);
-//            }
-//            if (length > USER_MAX_LETTER_NUMBER) {
-//                userNameWrongTipText.setText("用户名最多输入12个字符");
-//                userNameWrongTipText.setVisibility(View.VISIBLE);
-//            }
-//        }
-//    }
-//
-//    class wrongPasswordButtonClick implements View.OnClickListener {
-//        int length = passwordInput.getText().toString().length();
-//
-//        @Override
-//        public void onClick(View view) {
-//            if (length < PASSWORD_MIN_LETTER_NUMBER) {
-//                passwordWrongTipText.setText("用户名需要输入至少6个字符");
-//                passwordWrongTipText.setVisibility(View.VISIBLE);
-//            }
-//            if (length > PASSWORD_MAX_LETTER_NUMBER) {
-//                passwordWrongTipText.setText("用户名最多输入18个字符");
-//                passwordWrongTipText.setVisibility(View.VISIBLE);
-//            }
-//        }
-//    }
     public void findUserInformation(String url) {
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
@@ -244,11 +215,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void verifyInput() throws Exception {
         if (!isUserNameExist(userNameInput.getText().toString())) {
-            inputTips.setText("用户名不正确");
-            inputTips.setVisibility(View.VISIBLE);
+            showToast("用户名不正确");
         } else if (!isPasswordExist(passwordInput.getText().toString())) {
-            inputTips.setText("密码不正确");
-            inputTips.setVisibility(View.VISIBLE);
+            showToast("密码不正确");
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isCorrect", true);
@@ -260,5 +229,14 @@ public class MainActivity extends AppCompatActivity {
     public void startTasksActivity() {
         Intent intent = new Intent(MainActivity.this, TasksActivity.class);
         startActivity(intent);
+    }
+
+    public void showToast(String tips){
+        View view = View.inflate(this,R.layout.toast_show, findViewById(R.id.input_tips));
+        Toast toast = new Toast(this);
+        toast.setView(view);
+        ((TextView) view.findViewById(R.id.input_tips)).setText(tips);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

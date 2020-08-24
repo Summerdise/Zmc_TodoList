@@ -22,6 +22,9 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="40dp"
+        android:hint="用户名"
+        android:textColor="@color/grey"
+        android:textColorHint="@color/grey"
         app:layout_constraintTop_toBottomOf="@+id/main_logo"
         tools:layout_editor_absoluteX="40dp" />
 
@@ -62,6 +65,10 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="40dp"
+        android:hint="密码"
+        android:inputType="textPassword"
+        android:textColor="@color/grey"
+        android:textColorHint="@color/grey"
         app:layout_constraintTop_toBottomOf="@+id/user_name_input"
         tools:layout_editor_absoluteX="40dp" />
 
@@ -90,20 +97,5 @@
         app:layout_constraintTop_toBottomOf="@+id/password_input"
         tools:layout_editor_absoluteX="40dp" />
 
-    <TextView
-        android:id="@+id/input_tips"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:background="@color/grey_back"
-        android:gravity="center"
-        android:paddingHorizontal="10dp"
-        android:textColor="@color/grey"
-        android:textSize="18sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/login_in_button"
-        app:layout_constraintStart_toStartOf="@+id/login_in_button"
-        app:layout_constraintTop_toBottomOf="@+id/login_in_button"
-        tools:text="username is wrong!" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
