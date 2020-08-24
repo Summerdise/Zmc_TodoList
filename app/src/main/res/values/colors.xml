@@ -7,4 +7,6 @@
     <color name="white">#FFFFFF</color>
     <color name="grey">#BEAAAA</color>
     <color name="grey_back">#F5F5F5</color>
+    <color name="blue">#6BA5E9</color>
+    <color name="origin_background">#FAFAFA</color>
 </resources>
