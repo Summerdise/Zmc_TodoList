@@ -66,30 +66,22 @@ public class MainActivity extends AppCompatActivity {
         }
         ButterKnife.bind(this);
         sharedPreferences = getSharedPreferences("test", Context.MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("isCorrect",false)){
+        if (sharedPreferences.getBoolean("isCorrect", false)) {
             startTasksActivity();
         }
         userNameInput.addTextChangedListener(new LetterNumberWatcher());
         passwordInput.addTextChangedListener(new LetterNumberWatcher());
         userNameWrongTipButton.setOnClickListener(view -> {
             int length = userNameInput.getText().toString().length();
-            if (length < USER_MIN_LETTER_NUMBER) {
-                userNameWrongTipText.setText("用户名需要输入至少3个字符");
-                userNameWrongTipText.setVisibility(View.VISIBLE);
-            }
-            if (length > USER_MAX_LETTER_NUMBER) {
-                userNameWrongTipText.setText("用户名最多输入12个字符");
+            if (length < USER_MIN_LETTER_NUMBER || length > USER_MAX_LETTER_NUMBER) {
+                userNameWrongTipText.setText("用户名长度必须是3-12个字符");
                 userNameWrongTipText.setVisibility(View.VISIBLE);
             }
         });
         passwordWrongTipButton.setOnClickListener(view -> {
             int length = passwordInput.getText().toString().length();
-            if (length < PASSWORD_MIN_LETTER_NUMBER) {
-                passwordWrongTipText.setText("用户名需要输入至少6个字符");
-                passwordWrongTipText.setVisibility(View.VISIBLE);
-            }
-            if (length > PASSWORD_MAX_LETTER_NUMBER) {
-                passwordWrongTipText.setText("用户名最多输入18个字符");
+            if (length < PASSWORD_MIN_LETTER_NUMBER || length > PASSWORD_MAX_LETTER_NUMBER) {
+                passwordWrongTipText.setText("密码长度必须是6-18位字符");
                 passwordWrongTipText.setVisibility(View.VISIBLE);
             }
         });
@@ -215,9 +207,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void verifyInput() throws Exception {
         if (!isUserNameExist(userNameInput.getText().toString())) {
-            showToast("用户名不正确");
+            showToast("用户不存在");
         } else if (!isPasswordExist(passwordInput.getText().toString())) {
-            showToast("密码不正确");
+            showToast("密码错误");
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isCorrect", true);
@@ -231,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void showToast(String tips){
-        View view = View.inflate(this,R.layout.toast_show, findViewById(R.id.input_tips));
+    public void showToast(String tips) {
+        View view = View.inflate(this, R.layout.toast_show, findViewById(R.id.input_tips));
         Toast toast = new Toast(this);
         toast.setView(view);
         ((TextView) view.findViewById(R.id.input_tips)).setText(tips);
