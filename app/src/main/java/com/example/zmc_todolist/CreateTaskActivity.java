@@ -37,40 +37,50 @@ public class CreateTaskActivity extends AppCompatActivity {
     DatePicker chooseCalendar;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
         ButterKnife.bind(this);
-
-        chooseDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chooseCalendar.setVisibility(View.VISIBLE);
-                createTaskDetailText.setVisibility(View.INVISIBLE);
-                createTaskTitleText.setVisibility(View.INVISIBLE);
-                Calendar calendar = Calendar.getInstance();
-                int year,month,day;
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                day = calendar.get(Calendar.DAY_OF_MONTH);
-                chooseCalendar.init(year, month, day, new DatePicker.OnDateChangedListener() {
-                    @Override
-                    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        int chooseYear = year;
-                        int chooseMonth = (monthOfYear + 1);
-                        int chooseDay = dayOfMonth;
-                        Date date = new Date(chooseYear, chooseMonth, chooseDay);
-                        System.out.println(date.toString());
-                    }
-                });
-            }
-        });
+        chooseDateButton.setOnClickListener(new OnClickListener());
     }
 
+    class OnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            showCalendar();
+            Calendar calendar = Calendar.getInstance();
+            int year, month, day;
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+            chooseCalendar.init(year, month, day, new DatePicker.OnDateChangedListener() {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    int chooseYear = year - 1900;
+                    int chooseMonth = monthOfYear;
+                    int chooseDay = dayOfMonth;
+                    Date date = new Date(chooseYear, chooseMonth, chooseDay);
+                    hideCalendar();
+                    chooseDateButton.setText(dateFormat(date));
+                }
+            });
+        }
+    }
 
-    public String dateFormat(Date date){
+    public void showCalendar() {
+        chooseCalendar.setVisibility(View.VISIBLE);
+        createTaskDetailText.setVisibility(View.INVISIBLE);
+        createTaskTitleText.setVisibility(View.INVISIBLE);
+    }
+
+    public void hideCalendar() {
+        chooseCalendar.setVisibility(View.INVISIBLE);
+        createTaskDetailText.setVisibility(View.VISIBLE);
+        createTaskTitleText.setVisibility(View.VISIBLE);
+    }
+
+    public String dateFormat(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
         return formatter.format(date);
     }
