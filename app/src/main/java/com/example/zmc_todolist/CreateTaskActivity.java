@@ -95,7 +95,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                     deadlineDate = new Date(chooseYear, chooseMonth, chooseDay);
                     hideCalendar();
                     isDateChosen = true;
-                    chooseDateButton.setText(dateFormat(deadlineDate));
+                    chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(deadlineDate));
                     if (createTaskTitleText.getText().toString().length() > 0 && isDateChosen) {
                         saveButton.setEnabled(true);
                     } else {
@@ -141,8 +141,4 @@ public class CreateTaskActivity extends AppCompatActivity {
         createTaskTitleText.setVisibility(View.VISIBLE);
     }
 
-    public String dateFormat(Date date) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
-        return formatter.format(date);
-    }
 }

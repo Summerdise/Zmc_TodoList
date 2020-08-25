@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/list_now_date"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
@@ -19,16 +19,16 @@
         tools:text="星期四，23th" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/list_now_month"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/list_now_date"
+        app:layout_constraintTop_toBottomOf="@+id/list_now_date"
         tools:text="July" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/list_more_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
@@ -38,21 +38,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/list_task_number"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton"
+        app:layout_constraintBottom_toBottomOf="@+id/list_now_month"
+        app:layout_constraintEnd_toEndOf="@+id/list_more_button"
         tools:text="4个任务" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
+        android:id="@+id/tasks_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        android:layout_marginTop="130dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
