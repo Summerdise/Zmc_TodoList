@@ -4,14 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,8 +22,11 @@ import butterknife.ButterKnife;
 
 public class CreateTaskActivity extends AppCompatActivity {
 
+    private LocalDatabase database;
+    Boolean isDateChosen = false;
+    Date deadlineDate;
     @BindView(R.id.check_box)
-    Button checkBox;
+    CheckBox checkBox;
     @BindView(R.id.choose_date_button)
     Button chooseDateButton;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -35,17 +38,52 @@ public class CreateTaskActivity extends AppCompatActivity {
     TextView createTaskDetailText;
     @BindView(R.id.choose_calendar)
     DatePicker chooseCalendar;
-
+    @BindView(R.id.save_button)
+    Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
+        database = LocalDatabase.getInstance(this);
         ButterKnife.bind(this);
-        chooseDateButton.setOnClickListener(new OnClickListener());
+        chooseDateButton.setOnClickListener(new CalendarOnClickListener());
+        createTaskTitleText.addTextChangedListener(new CreateTitleTextWatcher());
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isComplete  = checkBox.isChecked();
+                boolean isNotice = chooseNoticeSwitch.isChecked();
+                String taskTitle = createTaskTitleText.getText().toString();
+                String taskDetail = createTaskDetailText.getText().toString();
+                Task newTask = new Task(deadlineDate,isComplete,isNotice,taskTitle,taskDetail);
+                database.taskDao().insertAll(newTask);
+
+            }
+        });
     }
 
-    class OnClickListener implements View.OnClickListener {
+    class CreateTitleTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (editable.length() > 0 && isDateChosen) {
+                saveButton.setEnabled(true);
+            } else {
+                saveButton.setEnabled(false);
+            }
+        }
+    }
+
+    class CalendarOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             showCalendar();
@@ -60,9 +98,10 @@ public class CreateTaskActivity extends AppCompatActivity {
                     int chooseYear = year - 1900;
                     int chooseMonth = monthOfYear;
                     int chooseDay = dayOfMonth;
-                    Date date = new Date(chooseYear, chooseMonth, chooseDay);
+                    deadlineDate = new Date(chooseYear, chooseMonth, chooseDay);
                     hideCalendar();
-                    chooseDateButton.setText(dateFormat(date));
+                    isDateChosen = true;
+                    chooseDateButton.setText(dateFormat(deadlineDate));
                 }
             });
         }
@@ -81,7 +120,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     public String dateFormat(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
         return formatter.format(date);
     }
 }
