@@ -12,8 +12,11 @@ public interface TaskDao {
     @Query("SELECT * FROM tasks")
     List<Task> getAll();
 
-//    @Query("SELECT * FROM tasks WHERE uid IN (:userIds)")
-//    List<Task> loadAllByIds(int[] userIds);
+    @Query("SELECT * FROM tasks WHERE is_complete = 0 ")
+    List<Task> getCompleted();
+
+    @Query("SELECT * FROM tasks WHERE is_complete = 1 ")
+    List<Task> getNotCompleted();
 //
 //    @Query("SELECT * FROM tasks WHERE first_name LIKE :first AND " +
 //            "last_name LIKE :last LIMIT 1")

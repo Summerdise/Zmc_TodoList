@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +45,9 @@ public class TasksActivity extends AppCompatActivity {
 
     private List<Task> getTaskList(){
         database = LocalDatabase.getInstance(this);
-        return database.taskDao().getAll();
+        List<Task> list = database.taskDao().getCompleted();
+        list.addAll(database.taskDao().getNotCompleted());
+        return list;
     }
 
     private void loadRecyclerView(){
