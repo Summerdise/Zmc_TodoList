@@ -18,7 +18,7 @@ public abstract class LocalDatabase extends RoomDatabase {
         if (localDatabase == null){
             synchronized (LocalDatabase.class){
                 if (localDatabase == null){
-                    localDatabase = Room.databaseBuilder( context,LocalDatabase.class,"tasks").build();
+                    localDatabase = Room.databaseBuilder( context,LocalDatabase.class,"tasks").allowMainThreadQueries().build();
                 }
             }
         }

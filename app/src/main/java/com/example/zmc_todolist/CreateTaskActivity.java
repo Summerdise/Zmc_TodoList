@@ -3,6 +3,7 @@ package com.example.zmc_todolist;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -40,6 +42,8 @@ public class CreateTaskActivity extends AppCompatActivity {
     DatePicker chooseCalendar;
     @BindView(R.id.save_button)
     Button saveButton;
+    @BindView(R.id.back_button)
+    ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +53,8 @@ public class CreateTaskActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         chooseDateButton.setOnClickListener(new CalendarOnClickListener());
         createTaskTitleText.addTextChangedListener(new CreateTitleTextWatcher());
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean isComplete  = checkBox.isChecked();
-                boolean isNotice = chooseNoticeSwitch.isChecked();
-                String taskTitle = createTaskTitleText.getText().toString();
-                String taskDetail = createTaskDetailText.getText().toString();
-                Task newTask = new Task(deadlineDate,isComplete,isNotice,taskTitle,taskDetail);
-//                database.taskDao().insertAll(newTask);
-            }
-        });
+        saveButton.setOnClickListener(new SaveButtonOnClickListener());
+        backButton.setOnClickListener(new BackButtonOnClickListener());
     }
 
     class CreateTitleTextWatcher implements TextWatcher {
@@ -108,6 +103,29 @@ public class CreateTaskActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+    }
+
+    class SaveButtonOnClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            boolean isComplete  = checkBox.isChecked();
+            boolean isNotice = chooseNoticeSwitch.isChecked();
+            String taskTitle = createTaskTitleText.getText().toString();
+            String taskDetail = createTaskDetailText.getText().toString();
+            Task newTask = new Task(deadlineDate,isComplete,isNotice,taskTitle,taskDetail);
+            database.taskDao().insertAll(newTask);
+            Intent intent = new Intent(CreateTaskActivity.this,TasksActivity.class);
+            startActivity(intent);
+        }
+    }
+    class BackButtonOnClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            finish();
+            Intent intent = new Intent(CreateTaskActivity.this,TasksActivity.class);
+            startActivity(intent);
         }
     }
 
