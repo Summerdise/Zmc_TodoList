@@ -57,8 +57,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                 String taskTitle = createTaskTitleText.getText().toString();
                 String taskDetail = createTaskDetailText.getText().toString();
                 Task newTask = new Task(deadlineDate,isComplete,isNotice,taskTitle,taskDetail);
-                database.taskDao().insertAll(newTask);
-
+//                database.taskDao().insertAll(newTask);
             }
         });
     }
@@ -102,6 +101,11 @@ public class CreateTaskActivity extends AppCompatActivity {
                     hideCalendar();
                     isDateChosen = true;
                     chooseDateButton.setText(dateFormat(deadlineDate));
+                    if (createTaskTitleText.getText().toString().length() > 0 && isDateChosen) {
+                        saveButton.setEnabled(true);
+                    } else {
+                        saveButton.setEnabled(false);
+                    }
                 }
             });
         }
