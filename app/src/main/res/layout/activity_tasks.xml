@@ -13,7 +13,8 @@
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
-        android:textSize="25sp"
+        android:textSize="22sp"
+        android:textColor="@color/blue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="星期四，23th" />
@@ -22,7 +23,7 @@
         android:id="@+id/list_now_month"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/list_now_date"
         app:layout_constraintTop_toBottomOf="@+id/list_now_date"
         tools:text="July" />
@@ -41,7 +42,7 @@
         android:id="@+id/list_task_number"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/list_now_month"
         app:layout_constraintEnd_toEndOf="@+id/list_more_button"
         tools:text="4个任务" />

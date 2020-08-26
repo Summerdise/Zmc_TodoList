@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -96,6 +97,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                     hideCalendar();
                     isDateChosen = true;
                     chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(deadlineDate));
+                    chooseDateButton.setTextColor(Color.parseColor("#6BA5E9"));
                     if (createTaskTitleText.getText().toString().length() > 0 && isDateChosen) {
                         saveButton.setEnabled(true);
                     } else {
@@ -106,25 +108,26 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
     }
 
-    class SaveButtonOnClickListener implements View.OnClickListener{
+    class SaveButtonOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
-            boolean isComplete  = checkBox.isChecked();
+            boolean isComplete = checkBox.isChecked();
             boolean isNotice = chooseNoticeSwitch.isChecked();
             String taskTitle = createTaskTitleText.getText().toString();
             String taskDetail = createTaskDetailText.getText().toString();
-            Task newTask = new Task(deadlineDate,isComplete,isNotice,taskTitle,taskDetail);
+            Task newTask = new Task(deadlineDate, isComplete, isNotice, taskTitle, taskDetail);
             database.taskDao().insertAll(newTask);
-            Intent intent = new Intent(CreateTaskActivity.this,TasksActivity.class);
+            Intent intent = new Intent(CreateTaskActivity.this, TasksActivity.class);
             startActivity(intent);
         }
     }
-    class BackButtonOnClickListener implements View.OnClickListener{
+
+    class BackButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             finish();
-            Intent intent = new Intent(CreateTaskActivity.this,TasksActivity.class);
+            Intent intent = new Intent(CreateTaskActivity.this, TasksActivity.class);
             startActivity(intent);
         }
     }
