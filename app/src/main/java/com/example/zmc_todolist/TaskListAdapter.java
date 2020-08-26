@@ -1,6 +1,7 @@
 package com.example.zmc_todolist;
 
-import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -36,8 +35,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,6 +47,10 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Task task = tasksList.get(position);
         ((TaskHolder) holder).listIsComplete.setChecked(task.isComplete);
         ((TaskHolder) holder).listTaskTitle.setText(task.taskTitle);
+        if(task.isComplete){
+            ((TaskHolder) holder).listTaskTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            ((TaskHolder) holder).listTaskTitle.setTextColor(Color.parseColor("#CDC1C5"));
+        }
         ((TaskHolder) holder).listDeadline.setText(new DateFormat().toChineseMonthDay(task.deadline));
     }
 

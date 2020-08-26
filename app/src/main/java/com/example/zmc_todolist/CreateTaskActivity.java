@@ -16,6 +16,8 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,6 +48,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     @BindView(R.id.back_button)
     ImageButton backButton;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         createTaskTitleText.addTextChangedListener(new CreateTitleTextWatcher());
         saveButton.setOnClickListener(new SaveButtonOnClickListener());
         backButton.setOnClickListener(new BackButtonOnClickListener());
+
     }
 
     class CreateTitleTextWatcher implements TextWatcher {

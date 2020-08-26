@@ -4,9 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.sql.SQLOutput;
 import java.util.Date;
@@ -28,6 +32,8 @@ public class TasksActivity extends AppCompatActivity {
     ImageButton listMoreButton;
     @BindView(R.id.list_task_number)
     TextView listTaskNumber;
+    @BindView(R.id.create_new_button)
+    FloatingActionButton createNewButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +46,7 @@ public class TasksActivity extends AppCompatActivity {
         listNowDate.setText(new DateFormat().toEnglishWeekDay(date));
         listNowMonth.setText(new DateFormat().toEnglishMonth(date));
         listTaskNumber.setText(taskList.size()+"个任务");
-
+        createNewButton.setOnClickListener(new createNewOnClickListener());
     }
 
     private List<Task> getTaskList(){
@@ -55,5 +61,14 @@ public class TasksActivity extends AppCompatActivity {
         tasksRecyclerView.setLayoutManager(layoutManager);
         TaskListAdapter adapter = new TaskListAdapter(taskList);
         tasksRecyclerView.setAdapter(adapter);
+    }
+
+    class createNewOnClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(TasksActivity.this,CreateTaskActivity.class);
+            startActivity(intent);
+        }
     }
 }

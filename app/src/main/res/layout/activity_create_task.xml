@@ -10,7 +10,9 @@
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_create_back"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,10 +93,10 @@
 
     <Button
         android:id="@+id/save_button"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/create_save_selected"
         android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
