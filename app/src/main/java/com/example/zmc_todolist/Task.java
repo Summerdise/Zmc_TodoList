@@ -1,6 +1,5 @@
 package com.example.zmc_todolist;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -8,10 +7,10 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 @Entity(tableName = "tasks")
-
 public class Task {
-    @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    public int id=0;
+
     Date deadline;
 
     @ColumnInfo(name = "is_complete")
@@ -26,7 +25,7 @@ public class Task {
     @ColumnInfo(name = "task_detail")
     String taskDetail;
 
-    public Task(@NonNull Date deadline, boolean isComplete, boolean isNotice, String taskTitle, String taskDetail) {
+    public Task(Date deadline, boolean isComplete, boolean isNotice, String taskTitle, String taskDetail) {
         this.deadline = deadline;
         this.isComplete = isComplete;
         this.isNotice = isNotice;

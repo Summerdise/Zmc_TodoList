@@ -3,7 +3,6 @@ package com.example.zmc_todolist;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,9 +15,6 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -61,6 +57,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         backButton.setOnClickListener(new BackButtonOnClickListener());
 
     }
+
 
     class CreateTitleTextWatcher implements TextWatcher {
 
@@ -122,8 +119,7 @@ public class CreateTaskActivity extends AppCompatActivity {
             String taskDetail = createTaskDetailText.getText().toString();
             Task newTask = new Task(deadlineDate, isComplete, isNotice, taskTitle, taskDetail);
             database.taskDao().insertAll(newTask);
-            Intent intent = new Intent(CreateTaskActivity.this, TasksActivity.class);
-            startActivity(intent);
+            finish();
         }
     }
 
@@ -131,8 +127,6 @@ public class CreateTaskActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             finish();
-            Intent intent = new Intent(CreateTaskActivity.this, TasksActivity.class);
-            startActivity(intent);
         }
     }
 

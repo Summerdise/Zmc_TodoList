@@ -46,7 +46,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Task task = tasksList.get(position);
         ((TaskHolder) holder).listIsComplete.setChecked(task.isComplete);
-        ((TaskHolder) holder).listTaskTitle.setText(task.taskTitle);
+        String showingTitle = getSimpleTitle(task.taskTitle);
+        ((TaskHolder) holder).listTaskTitle.setText(showingTitle);
         if(task.isComplete){
             ((TaskHolder) holder).listTaskTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             ((TaskHolder) holder).listTaskTitle.setTextColor(Color.parseColor("#CDC1C5"));
@@ -57,5 +58,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return tasksList.size();
+    }
+
+    public String getSimpleTitle(String originalTitle){
+        if(originalTitle.length()>25){
+            return originalTitle.substring(0,24)+"...";
+        }else{
+            return originalTitle;
+        }
     }
 }

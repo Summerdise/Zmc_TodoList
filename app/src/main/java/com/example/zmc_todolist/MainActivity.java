@@ -58,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sharedPreferences = getSharedPreferences("test", Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("isCorrect", false)) {
+            finish();
+            startTasksActivity();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -65,10 +70,6 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
         ButterKnife.bind(this);
-        sharedPreferences = getSharedPreferences("test", Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("isCorrect", false)) {
-            startTasksActivity();
-        }
         userNameInput.addTextChangedListener(new LetterNumberWatcher());
         passwordInput.addTextChangedListener(new LetterNumberWatcher());
         userNameWrongTipButton.setOnClickListener(view -> {
@@ -221,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
     public void startTasksActivity() {
         Intent intent = new Intent(MainActivity.this, TasksActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void showToast(String tips) {

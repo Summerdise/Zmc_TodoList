@@ -12,10 +12,10 @@ public interface TaskDao {
     @Query("SELECT * FROM tasks")
     List<Task> getAll();
 
-    @Query("SELECT * FROM tasks WHERE is_complete = 0 ")
+    @Query("SELECT * FROM tasks WHERE is_complete = 0 ORDER BY deadline")
     List<Task> getCompleted();
 
-    @Query("SELECT * FROM tasks WHERE is_complete = 1 ")
+    @Query("SELECT * FROM tasks WHERE is_complete = 1 ORDER BY deadline")
     List<Task> getNotCompleted();
 //
 //    @Query("SELECT * FROM tasks WHERE first_name LIKE :first AND " +

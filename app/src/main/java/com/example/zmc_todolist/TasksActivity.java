@@ -38,6 +38,16 @@ public class TasksActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadListLayout();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadListLayout();
+    }
+
+    private void loadListLayout(){
         setContentView(R.layout.activity_tasks);
         taskList = getTaskList();
         ButterKnife.bind(this);
