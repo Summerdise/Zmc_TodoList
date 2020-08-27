@@ -69,7 +69,7 @@ public class TasksActivity extends AppCompatActivity {
     private void loadRecyclerView(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         tasksRecyclerView.setLayoutManager(layoutManager);
-        TaskListAdapter adapter = new TaskListAdapter(taskList);
+        TaskListAdapter adapter = new TaskListAdapter(this,database,taskList);
         tasksRecyclerView.setAdapter(adapter);
     }
 

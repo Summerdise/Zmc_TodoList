@@ -1,5 +1,6 @@
 package com.example.zmc_todolist;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -14,12 +15,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import butterknife.BindView;
 
 public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
+    private Context context;
+    private LocalDatabase database;
     private List<Task> tasksList;
+    RecyclerView mRecyclerView;
 
-    public TaskListAdapter(List<Task> tasksList) {
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        mRecyclerView = recyclerView;
+    }
+    public TaskListAdapter(Context context, LocalDatabase database, List<Task> tasksList) {
+        this.context = context;
+        this.database = database;
         this.tasksList = tasksList;
     }
 
@@ -28,11 +41,14 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         CheckBox listIsComplete;
         TextView listDeadline;
 
+        RecyclerView tasksRecyclerView;
+
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             listTaskTitle=itemView.findViewById(R.id.list_task_title);
             listIsComplete=itemView.findViewById(R.id.list_is_complete);
             listDeadline=itemView.findViewById(R.id.list_deadline);
+            tasksRecyclerView=itemView.findViewById(R.id.tasks_recycler_view);
         }
     }
 
@@ -58,6 +74,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         ((TaskHolder) holder).listDeadline.setText(new DateFormat().toChineseMonthDay(task.deadline));
         ((TaskHolder) holder).listIsComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            private static final int CHANGE_UI = 1;
+
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean completeFlag) {
                 if (completeFlag) {
@@ -65,9 +83,12 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 } else {
                     task.isComplete = false;
                 }
-                LocalDatabase.localDatabase.taskDao().update(task);
-                notifyDataSetChanged();
-            }
+                if (!mRecyclerView.isComputingLayout() && mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+                    database.taskDao().update(task);
+                    getTaskList();
+                    notifyDataSetChanged();
+                }
+        }
         });
     }
 
@@ -82,5 +103,10 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }else{
             return originalTitle;
         }
+    }
+    private void getTaskList(){
+        tasksList.clear();
+        tasksList.addAll(database.taskDao().getCompleted());
+        tasksList.addAll(database.taskDao().getNotCompleted());
     }
 }
