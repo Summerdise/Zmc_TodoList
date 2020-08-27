@@ -23,10 +23,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CreateTaskActivity extends AppCompatActivity {
-
+    final int RECEIVE_FAULT_VALUE=-2;
     private LocalDatabase database;
     Boolean isDateChosen = false;
     Date deadlineDate;
+    int receiveMessage;
+
     @BindView(R.id.check_box)
     CheckBox checkBox;
     @BindView(R.id.choose_date_button)
@@ -55,11 +57,13 @@ public class CreateTaskActivity extends AppCompatActivity {
         database = LocalDatabase.getInstance(this);
         ButterKnife.bind(this);
         Intent intent=getIntent();
-        int recevie=intent.getIntExtra("id",-2);
-        if(recevie !=-2){
-            System.out.println(recevie);
+        receiveMessage=intent.getIntExtra("id",RECEIVE_FAULT_VALUE);
+        if(receiveMessage == RECEIVE_FAULT_VALUE){
+            createCreateTaskActivity();
+        }else{
+            createChangeTaskActivity();
         }
-        createCreateTaskActivity();
+
 
     }
 
@@ -71,7 +75,8 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void createChangeTaskActivity(){
-
+        Task task = database.taskDao().findById(receiveMessage);
+        System.out.println(task.toString());
     }
 
     class CreateTitleTextWatcher implements TextWatcher {

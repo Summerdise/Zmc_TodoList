@@ -18,6 +18,9 @@ public interface TaskDao {
 
     @Query("SELECT * FROM tasks WHERE is_complete = 1 ORDER BY deadline")
     List<Task> getNotCompleted();
+
+    @Query("SELECT * FROM tasks WHERE id = :task")
+    Task findById(int task);
 //
 //    @Query("SELECT * FROM tasks WHERE first_name LIKE :first AND " +
 //            "last_name LIKE :last LIMIT 1")
