@@ -22,6 +22,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Task> tasksList;
     RecyclerView mRecyclerView;
 
+    OnItemClickListener listener;
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -33,6 +34,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.context = context;
         this.database = database;
         this.tasksList = tasksList;
+    }
+
+    public interface OnItemClickListener{
+        public void OnItemClick(int position,int id);
+    }
+    public void setOnItemClick(OnItemClickListener listener){
+        this.listener=listener;
     }
 
     public static class TaskHolder extends RecyclerView.ViewHolder{
@@ -85,7 +93,15 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     getTaskList();
                     notifyDataSetChanged();
                 }
-        }
+            }
+        });
+        ((TaskHolder) holder).listTaskTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.OnItemClick(position, task.id);
+                }
+            }
         });
     }
 
@@ -107,5 +123,5 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         tasksList.addAll(database.taskDao().getNotCompleted());
     }
 
-    
+
 }

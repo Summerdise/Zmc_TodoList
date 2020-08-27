@@ -3,6 +3,7 @@ package com.example.zmc_todolist;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -43,6 +44,8 @@ public class CreateTaskActivity extends AppCompatActivity {
     Button saveButton;
     @BindView(R.id.back_button)
     ImageButton backButton;
+    @BindView(R.id.delete_button)
+    Button deleteButton;
 
 
     @Override
@@ -51,13 +54,25 @@ public class CreateTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_task);
         database = LocalDatabase.getInstance(this);
         ButterKnife.bind(this);
+        Intent intent=getIntent();
+        int recevie=intent.getIntExtra("id",-2);
+        if(recevie !=-2){
+            System.out.println(recevie);
+        }
+        createCreateTaskActivity();
+
+    }
+
+    private void createCreateTaskActivity(){
         chooseDateButton.setOnClickListener(new CalendarOnClickListener());
         createTaskTitleText.addTextChangedListener(new CreateTitleTextWatcher());
         saveButton.setOnClickListener(new SaveButtonOnClickListener());
         backButton.setOnClickListener(new BackButtonOnClickListener());
-
     }
 
+    private void createChangeTaskActivity(){
+
+    }
 
     class CreateTitleTextWatcher implements TextWatcher {
 

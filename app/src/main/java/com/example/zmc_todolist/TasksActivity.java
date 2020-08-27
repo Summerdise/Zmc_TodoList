@@ -71,6 +71,14 @@ public class TasksActivity extends AppCompatActivity {
         tasksRecyclerView.setLayoutManager(layoutManager);
         TaskListAdapter adapter = new TaskListAdapter(this,database,taskList);
         tasksRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClick(new TaskListAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int position, int id) {
+                Intent intent = new Intent(TasksActivity.this, CreateTaskActivity.class);
+                intent.putExtra("id",id);
+                startActivity(intent);
+            }
+        });
     }
 
     class createNewOnClickListener implements View.OnClickListener{
