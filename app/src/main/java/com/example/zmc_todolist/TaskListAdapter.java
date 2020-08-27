@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import butterknife.BindView;
 
 public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
@@ -74,8 +73,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         ((TaskHolder) holder).listDeadline.setText(new DateFormat().toChineseMonthDay(task.deadline));
         ((TaskHolder) holder).listIsComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            private static final int CHANGE_UI = 1;
-
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean completeFlag) {
                 if (completeFlag) {
@@ -109,4 +106,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         tasksList.addAll(database.taskDao().getCompleted());
         tasksList.addAll(database.taskDao().getNotCompleted());
     }
+
+    
 }

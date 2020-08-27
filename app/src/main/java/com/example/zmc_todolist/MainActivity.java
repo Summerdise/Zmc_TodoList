@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences = getSharedPreferences("test", Context.MODE_PRIVATE);
         if (sharedPreferences.getBoolean("isCorrect", false)) {
-            finish();
             startTasksActivity();
         }
         super.onCreate(savedInstanceState);
