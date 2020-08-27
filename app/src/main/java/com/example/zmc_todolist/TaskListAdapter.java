@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,11 +49,26 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ((TaskHolder) holder).listIsComplete.setChecked(task.isComplete);
         String showingTitle = getSimpleTitle(task.taskTitle);
         ((TaskHolder) holder).listTaskTitle.setText(showingTitle);
-        if(task.isComplete){
+        if (task.isComplete) {
             ((TaskHolder) holder).listTaskTitle.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            ((TaskHolder) holder).listTaskTitle.setTextColor(Color.parseColor("#CDC1C5"));
+            ((TaskHolder) holder).listTaskTitle.setTextColor(Color.parseColor("#EEE5DE"));
+        } else {
+            ((TaskHolder) holder).listTaskTitle.getPaint().setFlags(0);
+            ((TaskHolder) holder).listTaskTitle.setTextColor(Color.parseColor("#BEAAAA"));
         }
         ((TaskHolder) holder).listDeadline.setText(new DateFormat().toChineseMonthDay(task.deadline));
+        ((TaskHolder) holder).listIsComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean completeFlag) {
+                if (completeFlag) {
+                    task.isComplete = true;
+                } else {
+                    task.isComplete = false;
+                }
+                LocalDatabase.localDatabase.taskDao().update(task);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
