@@ -61,8 +61,10 @@ public class CreateTaskActivity extends AppCompatActivity {
         Intent intent = getIntent();
         receiveMessage = intent.getIntExtra("id", RECEIVE_FAULT_VALUE);
         if (receiveMessage != RECEIVE_FAULT_VALUE) {
+            deleteButton.setVisibility(View.VISIBLE);
             createChangeTaskActivity();
         } else {
+            deleteButton.setVisibility(View.INVISIBLE);
             isFromList = false;
         }
         createCreateTaskActivity();
@@ -89,7 +91,6 @@ public class CreateTaskActivity extends AppCompatActivity {
     private void createChangeTaskActivity() {
         task = database.taskDao().findById(receiveMessage);
         saveButton.setEnabled(true);
-        deleteButton.setVisibility(View.VISIBLE);
         chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(task.deadline));
         chooseDateButton.setTextColor(Color.parseColor("#6BA5E9"));
         createTaskTitleText.setText(task.taskTitle);
@@ -162,7 +163,6 @@ public class CreateTaskActivity extends AppCompatActivity {
             String taskTitle = createTaskTitleText.getText().toString();
             String taskDetail = createTaskDetailText.getText().toString();
             Task newTask = new Task(deadlineDate, isComplete, isNotice, taskTitle, taskDetail);
-            deleteButton.setVisibility(View.INVISIBLE);
             if (isFromList) {
                 newTask.id = receiveMessage;
                 database.taskDao().update(newTask);
@@ -176,7 +176,6 @@ public class CreateTaskActivity extends AppCompatActivity {
     class BackButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            deleteButton.setVisibility(View.INVISIBLE);
             finish();
         }
     }
