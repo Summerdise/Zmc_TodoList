@@ -23,11 +23,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CreateTaskActivity extends AppCompatActivity {
-    final int RECEIVE_FAULT_VALUE=-2;
+    final int RECEIVE_FAULT_VALUE = -2;
+    boolean isFromList = true;
     private LocalDatabase database;
     Boolean isDateChosen = false;
     Date deadlineDate;
     int receiveMessage;
+    Task task;
 
     @BindView(R.id.check_box)
     CheckBox checkBox;
@@ -56,27 +58,34 @@ public class CreateTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_task);
         database = LocalDatabase.getInstance(this);
         ButterKnife.bind(this);
-        Intent intent=getIntent();
-        receiveMessage=intent.getIntExtra("id",RECEIVE_FAULT_VALUE);
-        if(receiveMessage == RECEIVE_FAULT_VALUE){
-            createCreateTaskActivity();
-        }else{
+        Intent intent = getIntent();
+        receiveMessage = intent.getIntExtra("id", RECEIVE_FAULT_VALUE);
+        if (receiveMessage != RECEIVE_FAULT_VALUE) {
             createChangeTaskActivity();
+        } else {
+            isFromList = false;
         }
-
+        createCreateTaskActivity();
 
     }
 
-    private void createCreateTaskActivity(){
+    private void createCreateTaskActivity() {
         chooseDateButton.setOnClickListener(new CalendarOnClickListener());
         createTaskTitleText.addTextChangedListener(new CreateTitleTextWatcher());
         saveButton.setOnClickListener(new SaveButtonOnClickListener());
         backButton.setOnClickListener(new BackButtonOnClickListener());
     }
 
-    private void createChangeTaskActivity(){
-        Task task = database.taskDao().findById(receiveMessage);
-        System.out.println(task.toString());
+    private void createChangeTaskActivity() {
+        task = database.taskDao().findById(receiveMessage);
+        saveButton.setEnabled(true);
+        deleteButton.setVisibility(View.VISIBLE);
+        chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(task.deadline));
+        chooseDateButton.setTextColor(Color.parseColor("#6BA5E9"));
+        createTaskTitleText.setText(task.taskTitle);
+        createTaskDetailText.setText(task.taskDetail);
+        checkBox.setChecked(task.isComplete);
+        chooseNoticeSwitch.setChecked(task.isNotice);
     }
 
     class CreateTitleTextWatcher implements TextWatcher {
@@ -92,6 +101,8 @@ public class CreateTaskActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable editable) {
             if (editable.length() > 0 && isDateChosen) {
+                saveButton.setEnabled(true);
+            } else if (editable.length() > 0 && isFromList) {
                 saveButton.setEnabled(true);
             } else {
                 saveButton.setEnabled(false);
@@ -133,12 +144,21 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            if (!isDateChosen) {
+                deadlineDate = task.deadline;
+            }
             boolean isComplete = checkBox.isChecked();
             boolean isNotice = chooseNoticeSwitch.isChecked();
             String taskTitle = createTaskTitleText.getText().toString();
             String taskDetail = createTaskDetailText.getText().toString();
             Task newTask = new Task(deadlineDate, isComplete, isNotice, taskTitle, taskDetail);
-            database.taskDao().insertAll(newTask);
+            deleteButton.setVisibility(View.INVISIBLE);
+            if (isFromList) {
+                newTask.id = receiveMessage;
+                database.taskDao().update(newTask);
+            } else {
+                database.taskDao().insertAll(newTask);
+            }
             finish();
         }
     }
@@ -146,6 +166,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     class BackButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+            deleteButton.setVisibility(View.INVISIBLE);
             finish();
         }
     }

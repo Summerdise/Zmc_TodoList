@@ -30,8 +30,8 @@ public interface TaskDao {
     void insertAll(Task... tasks);
 
     @Update
-    void update(Task tasks);
+    void update(Task task);
 
     @Delete
-    void delete(Task user);
+    void delete(Task task);
 }
