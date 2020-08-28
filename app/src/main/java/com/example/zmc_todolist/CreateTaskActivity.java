@@ -74,6 +74,16 @@ public class CreateTaskActivity extends AppCompatActivity {
         createTaskTitleText.addTextChangedListener(new CreateTitleTextWatcher());
         saveButton.setOnClickListener(new SaveButtonOnClickListener());
         backButton.setOnClickListener(new BackButtonOnClickListener());
+        if (isFromList) {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    database.taskDao().delete(task);
+                    deleteButton.setVisibility(View.INVISIBLE);
+                    finish();
+                }
+            });
+        }
     }
 
     private void createChangeTaskActivity() {
