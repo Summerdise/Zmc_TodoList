@@ -7,6 +7,7 @@ import androidx.core.app.NotificationManagerCompat;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -201,6 +202,8 @@ public class CreateTaskActivity extends AppCompatActivity {
 
     public void createNotification(){
         createNotificationChannel();
+        Intent intent = new Intent(this, TasksActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         if(!chooseNoticeSwitch.isChecked()){
             return;
         }
@@ -208,7 +211,9 @@ public class CreateTaskActivity extends AppCompatActivity {
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(createTaskTitleText.getText())
                 .setContentText(createTaskDetailText.getText())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         int notificationId =1;
         notificationManager.notify(notificationId, builder.build());
