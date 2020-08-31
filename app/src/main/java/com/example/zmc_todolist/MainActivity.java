@@ -33,7 +33,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SharedPreferences sharedPreferences;
+    public static SharedPreferences sharedPreferences;
     UserInformation userInformation;
     final String USER_INFORMATION_URL = "https://twc-android-bootcamp.github.io/fake-data/data/user.json";
     final int USER_MIN_LETTER_NUMBER = 3;
