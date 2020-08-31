@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     public static SharedPreferences sharedPreferences;
     UserInformation userInformation;
     final String USER_INFORMATION_URL = "https://twc-android-bootcamp.github.io/fake-data/data/user.json";
+    final String USER_WRONG_INPUT_TIP = "用户名长度必须是3-12个字符";
+    final String PASSWORD_WRONG_INPUT_TIP = "密码长度必须是6-18位字符";
     final int USER_MIN_LETTER_NUMBER = 3;
     final int USER_MAX_LETTER_NUMBER = 12;
     final int PASSWORD_MIN_LETTER_NUMBER = 6;
@@ -74,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
         userNameWrongTipButton.setOnClickListener(view -> {
             int length = userNameInput.getText().toString().length();
             if (length < USER_MIN_LETTER_NUMBER || length > USER_MAX_LETTER_NUMBER) {
-                userNameWrongTipText.setText("用户名长度必须是3-12个字符");
+                userNameWrongTipText.setText(USER_WRONG_INPUT_TIP);
                 userNameWrongTipText.setVisibility(View.VISIBLE);
             }
         });
         passwordWrongTipButton.setOnClickListener(view -> {
             int length = passwordInput.getText().toString().length();
             if (length < PASSWORD_MIN_LETTER_NUMBER || length > PASSWORD_MAX_LETTER_NUMBER) {
-                passwordWrongTipText.setText("密码长度必须是6-18位字符");
+                passwordWrongTipText.setText(PASSWORD_WRONG_INPUT_TIP);
                 passwordWrongTipText.setVisibility(View.VISIBLE);
             }
         });

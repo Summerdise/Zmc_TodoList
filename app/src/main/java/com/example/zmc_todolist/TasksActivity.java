@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class TasksActivity extends AppCompatActivity {
         loadListLayout();
     }
 
-    private void loadListLayout(){
+    private void loadListLayout() {
         setContentView(R.layout.activity_tasks);
         taskList = getTaskList();
         ButterKnife.bind(this);
@@ -58,7 +57,7 @@ public class TasksActivity extends AppCompatActivity {
         Date date = new Date(System.currentTimeMillis());
         listNowDate.setText(new DateFormat().toEnglishWeekDay(date));
         listNowMonth.setText(new DateFormat().toEnglishMonth(date));
-        listTaskNumber.setText(taskList.size()+"个任务");
+        listTaskNumber.setText(taskList.size() + "个任务");
         createNewButton.setOnClickListener(new createNewOnClickListener());
         listMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,33 +90,34 @@ public class TasksActivity extends AppCompatActivity {
         });
         popupMenu.show();
     }
-    private List<Task> getTaskList(){
+
+    private List<Task> getTaskList() {
         database = LocalDatabase.getInstance(this);
         List<Task> list = database.taskDao().getCompleted();
         list.addAll(database.taskDao().getNotCompleted());
         return list;
     }
 
-    private void loadRecyclerView(){
+    private void loadRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         tasksRecyclerView.setLayoutManager(layoutManager);
-        TaskListAdapter adapter = new TaskListAdapter(this,database,taskList);
+        TaskListAdapter adapter = new TaskListAdapter(this, database, taskList);
         tasksRecyclerView.setAdapter(adapter);
         adapter.setOnItemClick(new TaskListAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position, int id) {
                 Intent intent = new Intent(TasksActivity.this, CreateTaskActivity.class);
-                intent.putExtra("id",id);
+                intent.putExtra("id", id);
                 startActivity(intent);
             }
         });
     }
 
-    class createNewOnClickListener implements View.OnClickListener{
+    class createNewOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(TasksActivity.this,CreateTaskActivity.class);
+            Intent intent = new Intent(TasksActivity.this, CreateTaskActivity.class);
             startActivity(intent);
         }
     }
