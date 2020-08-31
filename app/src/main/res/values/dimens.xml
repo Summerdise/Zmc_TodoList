@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="toast_width">50dp</dimen>
+    <dimen name="toast_padding_horizontal">15dp</dimen>
+    <dimen name="toast_text_size">18sp</dimen>
+    <dimen name="item_margin_start">25dp</dimen>
+    <dimen name="list_now_date_height">40dp</dimen>
+    <dimen name="list_now_date_margin_start">20dp</dimen>
+    <dimen name="list_now_date_margin_top">50dp</dimen>
+    <dimen name="list_now_date_text_size">22sp</dimen>
+    <dimen name="list_now_month_height">30dp</dimen>
+    <dimen name="list_now_month_text_size">18sp</dimen>
+    <dimen name="list_more_button_width">40dp</dimen>
+    <dimen name="list_more_button_height">40dp</dimen>
+    <dimen name="list_more_button_margin_top">15dp</dimen>
+    <dimen name="list_more_button_margin_end">20dp</dimen>
+    <dimen name="list_task_number_height">30dp</dimen>
+    <dimen name="list_task_number_text_size">18sp</dimen>
+    <dimen name="task_recycler_view_margin_top">130dp</dimen>
+    <dimen name="create_new_button_margin_end">20dp</dimen>
+    <dimen name="create_new_button_margin_bottom">20dp</dimen>
+</resources>

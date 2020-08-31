@@ -67,6 +67,7 @@ public class TasksActivity extends AppCompatActivity {
             }
         });
     }
+
     private void showPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.getMenuInflater().inflate(R.menu.exit_menu, popupMenu.getMenu());
@@ -88,7 +89,6 @@ public class TasksActivity extends AppCompatActivity {
                 popupMenu.dismiss();
             }
         });
-
         popupMenu.show();
     }
     private List<Task> getTaskList(){

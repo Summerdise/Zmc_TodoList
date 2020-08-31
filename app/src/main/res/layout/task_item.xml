@@ -10,7 +10,7 @@
         android:id="@+id/list_is_complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="@dimen/item_margin_start"
         android:buttonTint="@color/blue"
         android:scaleX="1.30"
         android:scaleY="1.30"
