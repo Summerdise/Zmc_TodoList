@@ -175,9 +175,9 @@ public class CreateTaskActivity extends AppCompatActivity {
                 database.taskDao().insertAll(newTask);
             }
             if (isNotice && !isComplete) {
-                addNotification(task.id, taskTitle, taskDetail, deadlineDate);
+                addNotification(newTask.id, taskTitle, taskDetail, deadlineDate);
             } else {
-                cancelNotification(task.id);
+                cancelNotification(newTask.id);
             }
             finish();
         }
