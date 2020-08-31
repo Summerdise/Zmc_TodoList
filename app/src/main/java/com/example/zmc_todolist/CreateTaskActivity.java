@@ -194,12 +194,18 @@ public class CreateTaskActivity extends AppCompatActivity {
         chooseCalendar.setVisibility(View.VISIBLE);
         createTaskDetailText.setVisibility(View.INVISIBLE);
         createTaskTitleText.setVisibility(View.INVISIBLE);
+        saveButton.setVisibility(View.INVISIBLE);
+        deleteButton.setVisibility(View.INVISIBLE);
     }
 
     public void hideCalendar() {
         chooseCalendar.setVisibility(View.INVISIBLE);
         createTaskDetailText.setVisibility(View.VISIBLE);
         createTaskTitleText.setVisibility(View.VISIBLE);
+        saveButton.setVisibility(View.VISIBLE);
+        if (receiveMessage != RECEIVE_FAULT_VALUE){
+            deleteButton.setVisibility(View.VISIBLE);
+        }
     }
 
     public void addNotification(int id, String title, String detail, Date date) {
