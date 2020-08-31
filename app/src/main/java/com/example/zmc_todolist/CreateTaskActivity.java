@@ -1,16 +1,13 @@
 package com.example.zmc_todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +21,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,7 +55,6 @@ public class CreateTaskActivity extends AppCompatActivity {
     @BindView(R.id.delete_button)
     Button deleteButton;
 
-    private String CHANNEL_ID ="ChannelID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +140,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                     int chooseYear = year - 1900;
                     int chooseMonth = monthOfYear;
                     int chooseDay = dayOfMonth;
-                    deadlineDate = new Date(chooseYear, chooseMonth, chooseDay);
+                    deadlineDate = new Date(chooseYear, chooseMonth, chooseDay, 6, 0, 0);
                     hideCalendar();
                     isDateChosen = true;
                     chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(deadlineDate));
@@ -176,7 +173,11 @@ public class CreateTaskActivity extends AppCompatActivity {
             } else {
                 database.taskDao().insertAll(newTask);
             }
-            createNotification();
+            if (isNotice && !isComplete) {
+                addNotification(task.id, taskTitle, taskDetail, deadlineDate);
+            } else {
+                cancelNotification(task.id);
+            }
             finish();
         }
     }
@@ -200,34 +201,23 @@ public class CreateTaskActivity extends AppCompatActivity {
         createTaskTitleText.setVisibility(View.VISIBLE);
     }
 
-    public void createNotification(){
-        createNotificationChannel();
-        Intent intent = new Intent(this, TasksActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        if(!chooseNoticeSwitch.isChecked()){
-            return;
-        }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(createTaskTitleText.getText())
-                .setContentText(createTaskDetailText.getText())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        int notificationId =1;
-        notificationManager.notify(notificationId, builder.build());
-    }
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+    public void addNotification(int id, String title, String detail, Date date) {
+        if (date.getTime() > System.currentTimeMillis()) {
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            intent.putExtra("title", title);
+            intent.putExtra("id", id);
+            intent.putExtra("detail", detail);
+            intent.setAction("NOTIFICATION");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, date.getTime(), pendingIntent);
         }
     }
 
+    public void cancelNotification(int id) {
+        MyNotification myNotification = new MyNotification(this);
+        myNotification.cancelNotificationById(id);
+    }
 }
+
+
