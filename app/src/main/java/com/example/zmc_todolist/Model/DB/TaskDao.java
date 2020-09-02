@@ -1,4 +1,4 @@
-package com.example.zmc_todolist;
+package com.example.zmc_todolist.Model.DB;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

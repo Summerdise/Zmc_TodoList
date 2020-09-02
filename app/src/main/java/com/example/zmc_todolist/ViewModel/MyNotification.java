@@ -1,4 +1,4 @@
-package com.example.zmc_todolist;
+package com.example.zmc_todolist.ViewModel;
 
 import android.app.Notification;
 
@@ -18,6 +18,9 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
 import androidx.core.app.NotificationManagerCompat;
+
+import com.example.zmc_todolist.R;
+import com.example.zmc_todolist.View.TasksActivity;
 
 public class MyNotification {
     private NotificationManagerCompat notificationManager;

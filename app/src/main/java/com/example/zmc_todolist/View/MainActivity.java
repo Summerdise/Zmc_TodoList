@@ -1,4 +1,4 @@
-package com.example.zmc_todolist;
+package com.example.zmc_todolist.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zmc_todolist.Model.RemoteData.UserInformation;
+import com.example.zmc_todolist.R;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -152,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        @SuppressLint({"UseCompatLoadingForDrawables",})
+
+        @SuppressLint("UseCompatLoadingForDrawables")
         public void loginButtonChange() {
             if (judgeUserNameRightly() && judgePasswordRightly()) {
                 loginInButton.setTextColor(Color.parseColor("#ffffff"));

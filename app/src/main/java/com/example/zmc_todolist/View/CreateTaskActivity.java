@@ -1,4 +1,4 @@
-package com.example.zmc_todolist;
+package com.example.zmc_todolist.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +18,13 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.example.zmc_todolist.ViewModel.AlarmReceiver;
+import com.example.zmc_todolist.ViewModel.DateFormat;
+import com.example.zmc_todolist.Model.DB.LocalDatabase;
+import com.example.zmc_todolist.Model.DB.Task;
+import com.example.zmc_todolist.ViewModel.MyNotification;
+import com.example.zmc_todolist.R;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -86,12 +93,12 @@ public class CreateTaskActivity extends AppCompatActivity {
     private void createChangeTaskActivity() {
         task = database.taskDao().findById(receiveMessage);
         saveButton.setEnabled(true);
-        chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(task.deadline));
+        chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(task.getDeadline()));
         chooseDateButton.setTextColor(Color.parseColor("#6BA5E9"));
-        createTaskTitleText.setText(task.taskTitle);
-        createTaskDetailText.setText(task.taskDetail);
-        checkBox.setChecked(task.isComplete);
-        chooseNoticeSwitch.setChecked(task.isNotice);
+        createTaskTitleText.setText(task.getTaskTitle());
+        createTaskDetailText.setText(task.getTaskDetail());
+        checkBox.setChecked(task.isComplete());
+        chooseNoticeSwitch.setChecked(task.isNotice());
     }
 
     class CreateTitleTextWatcher implements TextWatcher {
@@ -151,7 +158,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if (!isDateChosen) {
-                deadlineDate = task.deadline;
+                deadlineDate = task.getDeadline();
             }
             boolean isComplete = checkBox.isChecked();
             boolean isNotice = chooseNoticeSwitch.isChecked();
@@ -223,7 +230,6 @@ public class CreateTaskActivity extends AppCompatActivity {
         MyNotification myNotification = new MyNotification(this);
         myNotification.cancelNotificationById(id);
     }
-
 
 }
 

@@ -12,14 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CreateTaskActivity"
+            android:name=".View.CreateTaskActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".View.MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,14 +28,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TasksActivity"
+            android:name=".View.TasksActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <receiver
-            android:name=".AlarmReceiver"
+            android:name=".ViewModel.AlarmReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.example.zmc_todolist;
+package com.example.zmc_todolist.ViewModel;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

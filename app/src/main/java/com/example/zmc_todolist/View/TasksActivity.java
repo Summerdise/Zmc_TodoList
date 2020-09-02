@@ -1,4 +1,4 @@
-package com.example.zmc_todolist;
+package com.example.zmc_todolist.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +13,10 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.example.zmc_todolist.ViewModel.DateFormat;
+import com.example.zmc_todolist.Model.DB.LocalDatabase;
+import com.example.zmc_todolist.Model.DB.Task;
+import com.example.zmc_todolist.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
@@ -114,7 +118,6 @@ public class TasksActivity extends AppCompatActivity {
     }
 
     class createNewOnClickListener implements View.OnClickListener {
-
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(TasksActivity.this, CreateTaskActivity.class);
