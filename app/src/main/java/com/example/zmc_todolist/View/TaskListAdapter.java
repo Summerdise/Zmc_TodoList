@@ -7,42 +7,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zmc_todolist.Controller.DateFormat;
-import com.example.zmc_todolist.Model.DB.LocalDatabase;
+import com.example.zmc_todolist.Controller.TaskListAdapterController;
 import com.example.zmc_todolist.Model.DB.Task;
 import com.example.zmc_todolist.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 
 public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private Context context;
-    private LocalDatabase database;
-    private List<Task> tasksList;
-    RecyclerView mRecyclerView;
+    TasksActivity tasksActivity;
+    Context context;
+    List<Task> tasksList;
+    TaskListAdapterController taskListAdapterController = new TaskListAdapterController(this);
 
+
+    RecyclerView mRecyclerView;
     OnItemClickListener listener;
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NotNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecyclerView = recyclerView;
     }
 
-    public TaskListAdapter(Context context, LocalDatabase database, List<Task> tasksList) {
+    public TaskListAdapter(TasksActivity tasksActivity, Context context, List<Task> tasksList) {
+        this.tasksActivity = tasksActivity;
         this.context = context;
-        this.database = database;
         this.tasksList = tasksList;
     }
 
     public interface OnItemClickListener {
-        public void OnItemClick(int position, int id);
+        void OnItemClick(int position, int id);
     }
 
     public void setOnItemClick(OnItemClickListener listener) {
@@ -85,27 +88,21 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((TaskHolder) holder).listTaskTitle.setTextColor(Color.parseColor("#BEAAAA"));
         }
         ((TaskHolder) holder).listDeadline.setText(new DateFormat().toChineseMonthDay(task.getDeadline()));
-        ((TaskHolder) holder).listIsComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean completeFlag) {
-                if (completeFlag) {
-                    task.setComplete(true);
-                } else {
-                    task.setComplete(false);
-                }
-                if (!mRecyclerView.isComputingLayout() && mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
-                    database.taskDao().update(task);
-                    getTaskList();
-                    notifyDataSetChanged();
-                }
+        ((TaskHolder) holder).listIsComplete.setOnCheckedChangeListener((compoundButton, completeFlag) -> {
+            if (completeFlag) {
+                task.setComplete(true);
+            } else {
+                task.setComplete(false);
+            }
+            if (!mRecyclerView.isComputingLayout() && mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+                taskListAdapterController.getDatabase().taskDao().update(task);
+                getTaskList();
+                notifyDataSetChanged();
             }
         });
-        ((TaskHolder) holder).listTaskTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listener != null) {
-                    listener.OnItemClick(position, task.id);
-                }
+        ((TaskHolder) holder).listTaskTitle.setOnClickListener(view -> {
+            if (listener != null) {
+                listener.OnItemClick(position, task.id);
             }
         });
     }
@@ -113,6 +110,10 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return tasksList.size();
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public String getSimpleTitle(String originalTitle) {
@@ -125,7 +126,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void getTaskList() {
         tasksList.clear();
-        tasksList.addAll(database.taskDao().getCompleted());
-        tasksList.addAll(database.taskDao().getNotCompleted());
+        tasksList.addAll(taskListAdapterController.getDatabase().taskDao().getCompleted());
+        tasksList.addAll(taskListAdapterController.getDatabase().taskDao().getNotCompleted());
     }
 }

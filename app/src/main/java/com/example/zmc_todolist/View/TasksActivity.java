@@ -101,7 +101,7 @@ public class TasksActivity extends AppCompatActivity {
     private void loadRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         tasksRecyclerView.setLayoutManager(layoutManager);
-        TaskListAdapter adapter = new TaskListAdapter(this, tasksController.getDatabase(), taskList);
+        TaskListAdapter adapter = new TaskListAdapter(this,getBaseContext(), taskList);
         tasksRecyclerView.setAdapter(adapter);
         adapter.setOnItemClick(new TaskListAdapter.OnItemClickListener() {
             @Override
