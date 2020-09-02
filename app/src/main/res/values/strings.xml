@@ -3,4 +3,5 @@
     <string name="login_in_string">登录</string>
     <string name="channel_name">channelNotification</string>
     <string name="channel_description">notificationOnSixAM</string>
+    <string name="pop_exit_text">退出</string>
 </resources>

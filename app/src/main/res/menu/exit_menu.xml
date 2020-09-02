@@ -3,6 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/menu_exit"
-        android:title="menu1"
+        android:title="@string/pop_exit_text"
         tools:ignore="HardcodedText" />
 </menu>
