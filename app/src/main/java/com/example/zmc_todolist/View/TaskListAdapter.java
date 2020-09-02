@@ -27,8 +27,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     Context context;
     List<Task> tasksList;
     TaskListAdapterController taskListAdapterController = new TaskListAdapterController(this);
-
-
     RecyclerView mRecyclerView;
     OnItemClickListener listener;
 
@@ -95,7 +93,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 task.setComplete(false);
             }
             if (!mRecyclerView.isComputingLayout() && mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
-                taskListAdapterController.getDatabase().taskDao().update(task);
+                taskListAdapterController.updateDatabase(task);
                 getTaskList();
                 notifyDataSetChanged();
             }
@@ -126,7 +124,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void getTaskList() {
         tasksList.clear();
-        tasksList.addAll(taskListAdapterController.getDatabase().taskDao().getCompleted());
-        tasksList.addAll(taskListAdapterController.getDatabase().taskDao().getNotCompleted());
+        tasksList.addAll(taskListAdapterController.getCompletedList());
+        tasksList.addAll(taskListAdapterController.getNotCompletedList());
     }
 }

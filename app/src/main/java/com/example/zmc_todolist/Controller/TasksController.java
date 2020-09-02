@@ -20,10 +20,6 @@ public class TasksController {
         database = LocalDatabase.getInstance(tasksActivity);
     }
 
-    public LocalDatabase getDatabase() {
-        return database;
-    }
-
     public List<Task> getTaskList() {
         List<Task> list = database.taskDao().getCompleted();
         list.addAll(database.taskDao().getNotCompleted());
