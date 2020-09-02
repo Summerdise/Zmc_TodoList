@@ -3,9 +3,6 @@ package com.example.zmc_todolist.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,11 +16,9 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.example.zmc_todolist.Controller.AlarmReceiver;
+import com.example.zmc_todolist.Controller.CreateTaskController;
 import com.example.zmc_todolist.Controller.DateFormat;
-import com.example.zmc_todolist.Model.DB.LocalDatabase;
 import com.example.zmc_todolist.Model.DB.Task;
-import com.example.zmc_todolist.Controller.MyNotification;
 import com.example.zmc_todolist.R;
 
 import java.util.Calendar;
@@ -34,9 +29,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CreateTaskActivity extends AppCompatActivity {
+    CreateTaskController createTaskController = new CreateTaskController(this, getBaseContext());
     final int RECEIVE_FAULT_VALUE = -2;
     boolean isFromList = true;
-    private LocalDatabase database;
     Boolean isDateChosen = false;
     Date deadlineDate;
     int receiveMessage;
@@ -66,7 +61,6 @@ public class CreateTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
-        database = LocalDatabase.getInstance(this);
         ButterKnife.bind(this);
         Intent intent = getIntent();
         receiveMessage = intent.getIntExtra("id", RECEIVE_FAULT_VALUE);
@@ -91,7 +85,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void createChangeTaskActivity() {
-        task = database.taskDao().findById(receiveMessage);
+        task = createTaskController.getDatabase().taskDao().findById(receiveMessage);
         saveButton.setEnabled(true);
         chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(task.getDeadline()));
         chooseDateButton.setTextColor(Color.parseColor("#6BA5E9"));
@@ -167,14 +161,14 @@ public class CreateTaskActivity extends AppCompatActivity {
             Task newTask = new Task(deadlineDate, isComplete, isNotice, taskTitle, taskDetail);
             if (isFromList) {
                 newTask.id = receiveMessage;
-                database.taskDao().update(newTask);
+                createTaskController.getDatabase().taskDao().update(newTask);
             } else {
-                database.taskDao().insertAll(newTask);
+                createTaskController.getDatabase().taskDao().insertAll(newTask);
             }
             if (isNotice && !isComplete) {
-                addNotification(newTask.id, taskTitle, taskDetail, deadlineDate);
+                createTaskController.addNotification(newTask.id, taskTitle, taskDetail, deadlineDate);
             } else {
-                cancelNotification(newTask.id);
+                createTaskController.cancelNotification(newTask.id);
             }
             finish();
         }
@@ -190,7 +184,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     class deleteButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            database.taskDao().delete(task);
+            createTaskController.getDatabase().taskDao().delete(task);
             finish();
         }
     }
@@ -212,25 +206,6 @@ public class CreateTaskActivity extends AppCompatActivity {
             deleteButton.setVisibility(View.VISIBLE);
         }
     }
-
-    public void addNotification(int id, String title, String detail, Date date) {
-        if (date.getTime() > System.currentTimeMillis()) {
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            intent.putExtra("title", title);
-            intent.putExtra("id", id);
-            intent.putExtra("detail", detail);
-            intent.setAction("NOTIFICATION");
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-            AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, date.getTime(), pendingIntent);
-        }
-    }
-
-    public void cancelNotification(int id) {
-        MyNotification myNotification = new MyNotification(this);
-        myNotification.cancelNotificationById(id);
-    }
-
 }
 
 
