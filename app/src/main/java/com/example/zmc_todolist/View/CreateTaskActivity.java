@@ -85,7 +85,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void createChangeTaskActivity() {
-        task = createTaskController.getDatabase().taskDao().findById(receiveMessage);
+        task = createTaskController.findDataById(receiveMessage);
         saveButton.setEnabled(true);
         chooseDateButton.setText(new DateFormat().toChineseYearMonthDay(task.getDeadline()));
         chooseDateButton.setTextColor(Color.parseColor("#6BA5E9"));
@@ -161,9 +161,9 @@ public class CreateTaskActivity extends AppCompatActivity {
             Task newTask = new Task(deadlineDate, isComplete, isNotice, taskTitle, taskDetail);
             if (isFromList) {
                 newTask.id = receiveMessage;
-                createTaskController.getDatabase().taskDao().update(newTask);
+                createTaskController.updateDatabase(newTask);
             } else {
-                createTaskController.getDatabase().taskDao().insertAll(newTask);
+                createTaskController.insertToDatabase(newTask);
             }
             if (isNotice && !isComplete) {
                 createTaskController.addNotification(newTask.id, taskTitle, taskDetail, deadlineDate);
@@ -184,7 +184,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     class deleteButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            createTaskController.getDatabase().taskDao().delete(task);
+            createTaskController.deleteItemFromDatabase(task);
             finish();
         }
     }

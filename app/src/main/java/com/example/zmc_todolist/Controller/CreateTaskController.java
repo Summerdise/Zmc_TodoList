@@ -8,6 +8,7 @@ import android.content.Intent;
 import com.example.zmc_todolist.Controller.Util.AlarmReceiver;
 import com.example.zmc_todolist.Controller.Util.MyNotification;
 import com.example.zmc_todolist.Model.DB.LocalDatabase;
+import com.example.zmc_todolist.Model.DB.Task;
 import com.example.zmc_todolist.View.CreateTaskActivity;
 
 import java.util.Date;
@@ -23,8 +24,20 @@ public class CreateTaskController {
         this.database = LocalDatabase.getInstance(createTaskActivity);
     }
 
-    public LocalDatabase getDatabase() {
-        return database;
+    public Task findDataById(int id) {
+        return database.taskDao().findById(id);
+    }
+
+    public void updateDatabase(Task task) {
+        database.taskDao().update(task);
+    }
+
+    public void insertToDatabase(Task task) {
+        database.taskDao().insertAll(task);
+    }
+
+    public void deleteItemFromDatabase(Task task) {
+        database.taskDao().delete(task);
     }
 
     public void addNotification(int id, String title, String detail, Date date) {
@@ -40,9 +53,9 @@ public class CreateTaskController {
         }
     }
 
-
     public void cancelNotification(int id) {
         MyNotification myNotification = new MyNotification(createTaskActivity);
         myNotification.cancelNotificationById(id);
     }
+
 }
