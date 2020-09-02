@@ -4,18 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.example.zmc_todolist.Controller.DateFormat;
+import com.example.zmc_todolist.Controller.Util.DateFormat;
 import com.example.zmc_todolist.Controller.TasksController;
-import com.example.zmc_todolist.Model.DB.LocalDatabase;
 import com.example.zmc_todolist.Model.DB.Task;
 import com.example.zmc_todolist.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -55,6 +54,7 @@ public class TasksActivity extends AppCompatActivity {
         loadListLayout();
     }
 
+    @SuppressLint("SetTextI18n")
     private void loadListLayout() {
         setContentView(R.layout.activity_tasks);
         tasksController = new TasksController(this,getBaseContext());
@@ -66,35 +66,22 @@ public class TasksActivity extends AppCompatActivity {
         listNowMonth.setText(new DateFormat().toEnglishMonth(date));
         listTaskNumber.setText(taskList.size() + "个任务");
         createNewButton.setOnClickListener(new createNewOnClickListener());
-        listMoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopupMenu(view);
-            }
-        });
+        listMoreButton.setOnClickListener(view -> showPopupMenu(view));
     }
 
     private void showPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.getMenuInflater().inflate(R.menu.exit_menu, popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(TasksActivity.this, MainActivity.class);
-                startActivity(intent);
-                SharedPreferences.Editor editor = MainActivity.sharedPreferences.edit();
-                editor.putBoolean("isCorrect", false);
-                editor.apply();
-                finish();
-                return false;
-            }
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            Intent intent = new Intent(TasksActivity.this, MainActivity.class);
+            startActivity(intent);
+            SharedPreferences.Editor editor = MainActivity.sharedPreferences.edit();
+            editor.putBoolean("isCorrect", false);
+            editor.apply();
+            finish();
+            return false;
         });
-        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) {
-                popupMenu.dismiss();
-            }
-        });
+        popupMenu.setOnDismissListener(menu -> popupMenu.dismiss());
         popupMenu.show();
     }
 
@@ -103,13 +90,10 @@ public class TasksActivity extends AppCompatActivity {
         tasksRecyclerView.setLayoutManager(layoutManager);
         TaskListAdapter adapter = new TaskListAdapter(this,getBaseContext(), taskList);
         tasksRecyclerView.setAdapter(adapter);
-        adapter.setOnItemClick(new TaskListAdapter.OnItemClickListener() {
-            @Override
-            public void OnItemClick(int position, int id) {
-                Intent intent = new Intent(TasksActivity.this, CreateTaskActivity.class);
-                intent.putExtra("id", id);
-                startActivity(intent);
-            }
+        adapter.setOnItemClick((position, id) -> {
+            Intent intent = new Intent(TasksActivity.this, CreateTaskActivity.class);
+            intent.putExtra("id", id);
+            startActivity(intent);
         });
     }
 

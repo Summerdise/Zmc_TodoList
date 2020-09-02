@@ -17,7 +17,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.zmc_todolist.Controller.CreateTaskController;
-import com.example.zmc_todolist.Controller.DateFormat;
+import com.example.zmc_todolist.Controller.Util.DateFormat;
 import com.example.zmc_todolist.Model.DB.Task;
 import com.example.zmc_todolist.R;
 

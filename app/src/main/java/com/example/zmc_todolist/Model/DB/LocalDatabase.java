@@ -8,7 +8,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.example.zmc_todolist.Controller.Converters;
+import com.example.zmc_todolist.Controller.Util.Converters;
 
 @TypeConverters(value = {Converters.class})
 @Database(entities = {Task.class}, version = 1, exportSchema = false)

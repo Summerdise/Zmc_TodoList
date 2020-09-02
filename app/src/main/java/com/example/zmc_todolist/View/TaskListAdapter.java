@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.zmc_todolist.Controller.DateFormat;
+import com.example.zmc_todolist.Controller.Util.DateFormat;
 import com.example.zmc_todolist.Controller.TaskListAdapterController;
 import com.example.zmc_todolist.Model.DB.Task;
 import com.example.zmc_todolist.R;
