@@ -19,11 +19,11 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.example.zmc_todolist.ViewModel.AlarmReceiver;
-import com.example.zmc_todolist.ViewModel.DateFormat;
+import com.example.zmc_todolist.Controller.AlarmReceiver;
+import com.example.zmc_todolist.Controller.DateFormat;
 import com.example.zmc_todolist.Model.DB.LocalDatabase;
 import com.example.zmc_todolist.Model.DB.Task;
-import com.example.zmc_todolist.ViewModel.MyNotification;
+import com.example.zmc_todolist.Controller.MyNotification;
 import com.example.zmc_todolist.R;
 
 import java.util.Calendar;

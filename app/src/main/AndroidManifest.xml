@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".ViewModel.AlarmReceiver"
+            android:name=".Controller.AlarmReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
