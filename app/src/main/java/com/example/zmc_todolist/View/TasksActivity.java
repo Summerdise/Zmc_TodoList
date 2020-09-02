@@ -14,6 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.zmc_todolist.Controller.DateFormat;
+import com.example.zmc_todolist.Controller.TasksController;
 import com.example.zmc_todolist.Model.DB.LocalDatabase;
 import com.example.zmc_todolist.Model.DB.Task;
 import com.example.zmc_todolist.R;
@@ -26,8 +27,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TasksActivity extends AppCompatActivity {
-    private LocalDatabase database;
     List<Task> taskList;
+    TasksController tasksController;
+
     @BindView(R.id.tasks_recycler_view)
     RecyclerView tasksRecyclerView;
     @BindView(R.id.list_now_date)
@@ -55,7 +57,8 @@ public class TasksActivity extends AppCompatActivity {
 
     private void loadListLayout() {
         setContentView(R.layout.activity_tasks);
-        taskList = getTaskList();
+        tasksController = new TasksController(this,getBaseContext());
+        taskList = tasksController.getTaskList();
         ButterKnife.bind(this);
         loadRecyclerView();
         Date date = new Date(System.currentTimeMillis());
@@ -95,17 +98,10 @@ public class TasksActivity extends AppCompatActivity {
         popupMenu.show();
     }
 
-    private List<Task> getTaskList() {
-        database = LocalDatabase.getInstance(this);
-        List<Task> list = database.taskDao().getCompleted();
-        list.addAll(database.taskDao().getNotCompleted());
-        return list;
-    }
-
     private void loadRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         tasksRecyclerView.setLayoutManager(layoutManager);
-        TaskListAdapter adapter = new TaskListAdapter(this, database, taskList);
+        TaskListAdapter adapter = new TaskListAdapter(this, tasksController.getDatabase(), taskList);
         tasksRecyclerView.setAdapter(adapter);
         adapter.setOnItemClick(new TaskListAdapter.OnItemClickListener() {
             @Override
